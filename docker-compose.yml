@@ -1,0 +1,13 @@
+services:
+  spring-boot:
+    build: .
+    container_name: shipment-service
+    ports:
+      - "8080:8080"
+    networks:
+      - elk
+
+networks:
+  elk:
+    external: true
+    name: docker-elk_elk
