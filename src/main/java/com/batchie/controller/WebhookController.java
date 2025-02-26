@@ -30,13 +30,11 @@ public class WebhookController {
         log.info("Received TrackingMore webhook");
 
         try {
-            // Validate signature if provided
             if (signature != null && !trackingMoreWebhookHandler.validateWebhook(signature, rawRequest)) {
                 log.warn("Invalid TrackingMore webhook signature");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid signature");
             }
 
-            // Append trackingmore identifier to content type to help handler selection
             webhookService.processWebhook(rawRequest, contentType + ";source=trackingmore");
             return ResponseEntity.ok("Webhook processed successfully");
         } catch (UnsupportedOperationException e) {

@@ -26,7 +26,7 @@ public class Shipment {
     private ShipmentAddress recipientAddress;
     private List<PackageDetails> packages;
     private List<TrackingEvent> trackingEvents;
-    private String status;
+    private ShipmentStatus status;
     private double totalWeight;
     private double totalCost;
 
