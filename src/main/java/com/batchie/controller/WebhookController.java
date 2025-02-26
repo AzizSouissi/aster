@@ -1,7 +1,6 @@
 package com.batchie.controller;
 
-import com.batchie.service.handler.WebhookHandler;
-import com.batchie.service.handler.WebhookHandlerFactory;
+import com.batchie.service.WebhookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class WebhookController {
 
-    private final WebhookHandlerFactory webhookHandlerFactory;
+    private final WebhookService webhookService;
 
     @PostMapping
     public ResponseEntity<String> handleWebhook(@RequestHeader("Content-Type") String contentType, @Valid @RequestBody String rawRequest) {
         try {
-            WebhookHandler handler = webhookHandlerFactory.getHandler(contentType);
-            handler.handleWebhook(rawRequest, contentType);
+            webhookService.processWebhook(rawRequest, contentType);
             return ResponseEntity.ok("Webhook received successfully");
         } catch (UnsupportedOperationException e) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(e.getMessage());

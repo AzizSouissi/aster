@@ -1,6 +1,5 @@
 package com.batchie.util;
 
-import com.batchie.dto.ShipmentEventDto;
 import com.batchie.dto.TrackingEventDto;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -11,6 +10,7 @@ import java.io.StringReader;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class WebhookUtil {
@@ -38,7 +38,7 @@ public class WebhookUtil {
         }
     }
 
-    public ShipmentEventDto parseSoapPayload(String rawRequest) {
+    public TrackingEventDto parseSoapPayload(String rawRequest) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -50,9 +50,12 @@ public class WebhookUtil {
             String details = getXmlValue(document, "details");
             String shipmentId = getXmlValue(document, "shipmentId");
 
-            return ShipmentEventDto.builder()
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            LocalDateTime parsedTimestamp = timestamp != null ? LocalDateTime.parse(timestamp, formatter) : null;
+
+            return TrackingEventDto.builder()
                     .event(event)
-                    .timestamp(timestamp != null ? LocalDateTime.parse(timestamp) : null)
+                    .timestamp(parsedTimestamp)
                     .location(location)
                     .details(details)
                     .shipmentId(shipmentId)

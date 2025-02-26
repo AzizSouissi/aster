@@ -1,9 +1,12 @@
 package com.batchie.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -14,4 +17,7 @@ public class TrackingEventDto {
     private String event;
     private String location;
     private String details;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime timestamp;
 }

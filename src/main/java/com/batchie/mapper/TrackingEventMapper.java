@@ -13,6 +13,7 @@ public class TrackingEventMapper {
                 .event(dto.getEvent())
                 .location(dto.getLocation())
                 .details(dto.getDetails())
+                .timestamp(dto.getTimestamp())
                 .build();
     }
 
@@ -22,6 +23,7 @@ public class TrackingEventMapper {
                 .event(domain.getEvent())
                 .location(domain.getLocation())
                 .details(domain.getDetails())
+                .timestamp(domain.getTimestamp())
                 .build();
     }
 }

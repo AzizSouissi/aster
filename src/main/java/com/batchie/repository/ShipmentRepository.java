@@ -1,9 +1,9 @@
 package com.batchie.repository;
 
-import com.batchie.dto.TrackingEventDto;
+import com.batchie.domain.TrackingEvent;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ShipmentRepository extends MongoRepository<TrackingEventDto, String> {
+public interface ShipmentRepository extends MongoRepository<TrackingEvent, String> {
 }

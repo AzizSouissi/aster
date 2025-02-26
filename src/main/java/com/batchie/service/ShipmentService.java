@@ -31,14 +31,14 @@ public class ShipmentService {
 
     public void createShipment(TrackingEventDto trackingEventDto) {
         TrackingEvent trackingEvent = trackingEventMapper.toDomain(trackingEventDto);
-        shipmentRepository.save(trackingEventMapper.toDto(trackingEvent));
+        shipmentRepository.save(trackingEvent);
     }
 
     public boolean updateShipment(String id, TrackingEventDto trackingEventDto) {
         if (shipmentRepository.existsById(id)) {
             TrackingEvent trackingEvent = trackingEventMapper.toDomain(trackingEventDto);
             trackingEvent.setShipmentId(id);
-            shipmentRepository.save(trackingEventMapper.toDto(trackingEvent));
+            shipmentRepository.save(trackingEvent);
             return true;
         } else {
             return false;
@@ -52,5 +52,9 @@ public class ShipmentService {
         } else {
             return false;
         }
+    }
+
+    public void processShipmentEvent(TrackingEvent trackingEvent) {
+        shipmentRepository.save(trackingEvent);
     }
 }
