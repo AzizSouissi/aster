@@ -28,12 +28,10 @@ public class TrackingMoreControllerTest {
     @Mock
     private TrackingMoreWebhookHandler trackingMoreWebhookHandler;
 
-    private WebhookController webhookController;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        webhookController = new WebhookController(webhookService, trackingMoreWebhookHandler);
+        WebhookController webhookController = new WebhookController(webhookService, trackingMoreWebhookHandler);
         mockMvc = MockMvcBuilders.standaloneSetup(webhookController).build();
     }
 
