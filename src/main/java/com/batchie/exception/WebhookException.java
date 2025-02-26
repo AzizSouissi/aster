@@ -1,4 +1,12 @@
 package com.batchie.exception;
 
-public class WebhookException {
+public class WebhookException extends RuntimeException {
+
+    public WebhookException(String message) {
+        super(message);
+    }
+
+    public WebhookException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
