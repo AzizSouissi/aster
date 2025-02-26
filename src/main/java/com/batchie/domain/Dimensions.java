@@ -2,13 +2,13 @@ package com.batchie.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Dimensions {
     private double length;
     private double width;
     private double height;
+    private String unit; // e.g., "in", "cm"
 }

@@ -1,5 +1,6 @@
 package com.batchie.util;
 
+import com.batchie.domain.EventType;
 import com.batchie.dto.TrackingEventDto;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -44,7 +45,7 @@ public class WebhookUtil {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(new StringReader(rawRequest)));
 
-            String event = getXmlValue(document, "event");
+            EventType event = EventType.valueOf(getXmlValue(document, "event"));
             String timestamp = getXmlValue(document, "timestamp");
             String location = getXmlValue(document, "location");
             String details = getXmlValue(document, "details");
@@ -54,7 +55,7 @@ public class WebhookUtil {
             LocalDateTime parsedTimestamp = timestamp != null ? LocalDateTime.parse(timestamp, formatter) : null;
 
             return TrackingEventDto.builder()
-                    .event(event)
+                    .eventType(event)
                     .timestamp(parsedTimestamp)
                     .location(location)
                     .details(details)

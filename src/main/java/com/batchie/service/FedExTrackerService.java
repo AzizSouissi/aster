@@ -1,6 +1,6 @@
 package com.batchie.service;
 
-import com.batchie.domain.Track;
+import com.batchie.domain.TrackingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,13 @@ public class FedExTrackerService implements TrackerService {
 
     @Override
     public String buildTrackingUrl(String trackingNumber) {
-        return UriComponentsBuilder.fromHttpUrl(trackingUrl)
+        return UriComponentsBuilder.fromUriString(trackingUrl)
                 .queryParam("tracknumbers", trackingNumber)
                 .toUriString();
     }
 
     @Override
-    public Track fetchTrackingDetails(String trackingNumber) {
+    public TrackingEvent fetchTrackingDetails(String trackingNumber) {
         String requestBody = buildRequestBody(trackingNumber);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
@@ -51,9 +51,9 @@ public class FedExTrackerService implements TrackerService {
                 "}";
     }
 
-    private Track buildResponse(String response) {
+    private TrackingEvent buildResponse(String response) {
         // Parse the JSON response here and return Track with events
-        Track track = new Track();
+        TrackingEvent track = new TrackingEvent();
 
         // Assuming you have a way to parse the response to fill Track object
         // Parse the response, and populate the Track object

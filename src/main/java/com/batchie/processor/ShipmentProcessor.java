@@ -1,8 +1,9 @@
 package com.batchie.processor;
 
+import com.batchie.domain.EventType;
 import com.batchie.domain.Shipment;
 import com.batchie.domain.ShipmentResult;
-import com.batchie.domain.Track;
+import com.batchie.domain.TrackingEvent;
 import com.batchie.service.TrackerService;
 import com.batchie.service.handler.ShipmentProviderFactory;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class ShipmentProcessor implements ItemProcessor<Shipment, ShipmentResult> {
 
@@ -22,6 +25,7 @@ public class ShipmentProcessor implements ItemProcessor<Shipment, ShipmentResult
     @Autowired
     private ShipmentProviderFactory providerFactory;
 
+    private TrackerService trackerService;
     private String currentProvider;
 
     @BeforeStep
@@ -29,6 +33,14 @@ public class ShipmentProcessor implements ItemProcessor<Shipment, ShipmentResult
         JobParameters parameters = stepExecution.getJobParameters();
         this.currentProvider = parameters.getString("provider");
         logger.info("Processor initialized for provider: {}", currentProvider);
+
+        try {
+            // Initialize the tracker service based on provider early to fail fast
+            this.trackerService = providerFactory.getTrackerService(currentProvider);
+        } catch (Exception e) {
+            logger.error("Failed to initialize tracker service for provider: {}", currentProvider, e);
+            throw e;
+        }
     }
 
     @Override
@@ -39,12 +51,20 @@ public class ShipmentProcessor implements ItemProcessor<Shipment, ShipmentResult
         result.setShipment(shipment);
 
         try {
-            TrackerService trackerService = providerFactory.getTrackerService(currentProvider);
-            Track trackingData = trackerService.fetchTrackingDetails(shipment.getTrackingNumber());
+            // We'll create a tracking event for this shipment
+            TrackingEvent trackingEvent = TrackingEvent.builder()
+                    .shipmentId(shipment.getId())
+                    .eventType(EventType.valueOf("PROCESSING"))
+                    .details("Shipment processing initiated")
+                    .timestamp(LocalDateTime.now())
+                    .build();
 
-            result.setTrack(trackingData);
+            // Get tracking URL from the service
+            String trackingUrl = trackerService.buildTrackingUrl(shipment.getTrackingNumber());
+
             result.setSuccess(true);
-            result.setTrackingUrl(trackerService.buildTrackingUrl(shipment.getTrackingNumber()));
+            result.setTrackingUrl(trackingUrl);
+            result.setTrackingEvent(trackingEvent);
 
             logger.info("Successfully processed shipment: {}", shipment.getTrackingNumber());
 

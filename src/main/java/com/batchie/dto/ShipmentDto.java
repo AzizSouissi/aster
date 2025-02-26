@@ -1,9 +1,15 @@
-package com.batchie.domain;
+package com.batchie.dto;
 
+import com.batchie.domain.PackageDetails;
+import com.batchie.domain.ShipmentAddress;
+import com.batchie.domain.ShipmentStatus;
+import com.batchie.domain.TrackingEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,14 +19,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "shipments")
-public class Shipment {
+public class ShipmentDto {
     @Id
     private String id;
     private String trackingNumber;
-    private String provider;  // The shipping carrier (UPS, FedEx, etc.)
-    private String serviceLevel;  // Express, Standard, etc.
-    private ShipmentStatus status;  // Overall status of the shipment
+    private String provider;
+    private String serviceLevel;
+    private ShipmentStatus status;
 
     private ShipmentAddress senderAddress;
     private ShipmentAddress recipientAddress;

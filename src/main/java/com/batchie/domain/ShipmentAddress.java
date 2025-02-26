@@ -2,11 +2,10 @@ package com.batchie.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class ShipmentAddress {
     private String name;
     private String company;

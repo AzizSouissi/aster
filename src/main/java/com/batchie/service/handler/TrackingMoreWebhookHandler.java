@@ -1,6 +1,7 @@
 package com.batchie.service.handler;
 
 import com.batchie.config.TrackingMoreConfig;
+import com.batchie.domain.EventType;
 import com.batchie.dto.TrackingEventDto;
 import com.batchie.mapper.TrackingEventMapper;
 import com.batchie.service.ShipmentService;
@@ -44,7 +45,6 @@ public class TrackingMoreWebhookHandler implements WebhookHandler {
             TrackingEventDto trackingEventDto = parseTrackingMorePayload(rawRequest);
             if (trackingEventDto != null) {
                 log.info("Saving tracking event for shipment: {}", trackingEventDto.getShipmentId());
-                shipmentService.processShipmentEvent(trackingEventMapper.toDomain(trackingEventDto));
                 log.info("Successfully processed TrackingMore webhook");
             } else {
                 log.warn("Unable to parse TrackingMore webhook payload");
@@ -64,7 +64,7 @@ public class TrackingMoreWebhookHandler implements WebhookHandler {
             return null;
         }
 
-        String event = dataNode.path("status").asText("");
+        EventType event = EventType.valueOf(dataNode.path("status").asText(""));
         String location = "";
 
         // Extract location from tracking_location if available
@@ -91,13 +91,13 @@ public class TrackingMoreWebhookHandler implements WebhookHandler {
             }
         }
 
-        if (shipmentId.isEmpty() || event.isEmpty()) {
+        if (shipmentId.isEmpty() || event.describeConstable().isEmpty()) {
             log.warn("Required fields missing in TrackingMore payload");
             return null;
         }
 
         return TrackingEventDto.builder()
-                .event(event)
+                .eventType(event)
                 .location(location)
                 .details(details)
                 .shipmentId(shipmentId)

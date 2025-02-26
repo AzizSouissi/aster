@@ -10,7 +10,7 @@ public class TrackingEventMapper {
     public TrackingEvent toDomain(TrackingEventDto dto) {
         return TrackingEvent.builder()
                 .shipmentId(dto.getShipmentId())
-                .event(dto.getEvent())
+                .eventType(dto.getEventType())
                 .location(dto.getLocation())
                 .details(dto.getDetails())
                 .timestamp(dto.getTimestamp())
@@ -20,7 +20,7 @@ public class TrackingEventMapper {
     public TrackingEventDto toDto(TrackingEvent domain) {
         return TrackingEventDto.builder()
                 .shipmentId(domain.getShipmentId())
-                .event(domain.getEvent())
+                .eventType(domain.getEventType())
                 .location(domain.getLocation())
                 .details(domain.getDetails())
                 .timestamp(domain.getTimestamp())

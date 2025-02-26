@@ -1,16 +1,14 @@
 package com.batchie.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Builder
 public class ShipmentResult {
     private Shipment shipment;
+    private TrackingEvent trackingEvent;
     private boolean success;
-    private String trackingUrl;
     private String errorMessage;
-    private Track track;
+    private String trackingUrl;
 }
